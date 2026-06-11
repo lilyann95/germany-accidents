@@ -3,3 +3,8 @@
 .env.*.local
 
 node_modules
+node_modules.local
+node_modules.*.local
+dist
+dist-ssr
+*.local
