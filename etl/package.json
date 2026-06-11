@@ -1,0 +1,26 @@
+{
+  "name": "etl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "import-all.js",
+  "scripts": {
+    "start": "node import-all.js",
+    "dev": "nodemon import-all.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "adm-zip": "^0.5.17",
+    "axios": "^1.17.0",
+    "csv-parser": "^3.2.1",
+    "nodemon": "^3.1.14",
+    "uuid": "^14.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "directories": {
+    "lib": "lib"
+  }
+}
