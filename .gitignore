@@ -1,10 +1,14 @@
+# Environment files
 .env
-.env.local
-.env.*.local
+**/.env
 
-node_modules
-node_modules.local
-node_modules.*.local
-dist
-dist-ssr
-*.local
+# Node modules
+node_modules/
+**/node_modules/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
