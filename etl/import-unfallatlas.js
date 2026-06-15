@@ -13,88 +13,96 @@ import {
   lightMap,
 } from "./mapping/unfallatlas.js";
 
-export const runUnfallatlasImport = async (req, res) => {
+export const runUnfallatlasImport = async () => {
   const start = Date.now();
+  let importedCount = 0;
 
   try {
-    //download Zip
-    const response = await axios({
-      method: "GET",
-      url: process.env.CSV_DOWNLOAD_URL,
-      responseType: "stream",
-    });
-
-    response.data.pipe(fs.createWriteStream("./downloads/unfallatlas.zip"));
-
-    //Extract Zip
-    const zip = new AdmZip("./downloads/unfallatlas.zip");
-
-    zip.extractAllTo("./downloads/unfallatlas");
-
-    //Parse CSV
-    const rows = [];
-    fs.createReadStream("unfallorte2024.csv")
-      .pipe(csv())
-      .on("data", (row) => rows.push(row))
-      .on("end", () => {
-        console.log(rows.length);
-      });
+    const stream = fs
+      .createReadStream("./data/unfallorte2024_LinRef.csv")
+      .pipe(csv({ separator: ";" }));
 
     //Transform fields
-    for (const row of rows) {
-      // const region = await regionModel.findOne({
-      //   ags: row.ULAND + row.UKREIS + row.UGEMEINDE,
-      // });
+    const toNumber = (value) => {
+      if (value == null || value === "") return null;
 
+      const n = Number(String(value).replace(",", "."));
+      return Number.isFinite(n) ? n : null;
+    };
+
+    let data = {};
+
+    for await (const row of stream) {
       const region = await regionModel.findOne({
-        ags: row.AGS,
+        ags:
+          row.ULAND +
+          row.UREGBEZ +
+          row.UKREIS.padStart(2, "0") +
+          row.UGEMEINDE.padStart(3, "0"),
       });
 
+      if (!region) continue;
+
       const participants = Object.entries(participantMap)
-        .filter(([field]) => row[field] === 1)
+        .filter(([field]) => Number(row[field]) === 1)
         .map(([, value]) => value);
 
-      const accident = {
-        accident_id: row.UIDENTSTLAE,
-        year: row.UJAHR,
-        month: row.UMONAT,
-        hour: row.USTUNDE,
-        weekday: weekdayMap[row.UWOCHENTAG],
-        category: categoryMap[row.UKATEGORIE],
-        type: typeMap[row.UART],
-        light: lightMap[row.ULICHTVERH],
-        participants: participants,
-        lon: Number(row.XGCSWGS84),
-        lat: Number(row.YGCSWGS84),
-        region_id: region.region_id,
-      };
+      const lon = toNumber(row.XGCSWGS84);
+      const lat = toNumber(row.YGCSWGS84);
+      // console.log("check: 5", lon, lat);
+      if (!lat || !lon) continue;
 
-      //store in mongodb
-      const inserted = await accidentModel.insertMany(accident);
+      data = await accidentModel.updateOne(
+        { accident_id: row.UIDENTSTLAE },
+        {
+          $set: {
+            year: Number(row.UJAHR),
+            month: Number(row.UMONAT),
+            hour: Number(row.USTUNDE),
+            weekday: weekdayMap[row.UWOCHENTAG],
+            category: categoryMap[row.UKATEGORIE],
+            type: typeMap[row.UART],
+            light: lightMap[row.ULICHTVERH],
+            participants: participants,
+            lat,
+            lon,
+            region_id: region.region_id,
+          },
+          $setOnInsert: {
+            accident_id: row.UIDENTSTLAE,
+          },
+        },
+        { upsert: true },
+      );
+
+      importedCount++;
     }
+    // console.log("check: 5");
     //write an ImportRun
     const importRun = await createImportRun({
       source: "Unfallatlas",
       importDate: new Date(),
-      recordsImported: accidents.length,
+      recordsImported: importedCount,
       version: "2024",
       status: "success",
       durationMs: Date.now() - start,
     });
 
-    console.log("Data stored successfully", importRun);
+    console.log("Data stored successfully", {
+      importRun: importRun,
+      data: data,
+    });
   } catch (err) {
     //write an ImportRun
+    console.error("Import failed", err.stack);
     const importERun = await createImportRun({
       source: "Unfallatlas",
       importDate: new Date(),
-      recordsImported: accidents.length,
+      recordsImported: importedCount,
       version: "2024",
       status: "failed",
       durationMs: Date.now() - start,
       error: err.message,
     });
-
-    console.error("Import failed", err);
   }
 };

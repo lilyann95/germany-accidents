@@ -17,26 +17,17 @@ export const runAgsImport = async () => {
     //Transform fields
     let inserted = {};
     for (const row of rows) {
-      //rows with municipality AGS
-      if (!row[6] || String(row[6]).length !== 8) {
-        continue;
-      }
-
-      // const region = {
-      //   region_id: uuid(),
-      //   parent_region_id: null,
-      //   ags: String(row[6]),
-      //   name: row[7],
-      //   level: getLevel(row[4]),
-      //   geometry: null,
-      //   population: Number(row[14]) || null,
-      // };
-      // console.log("RAW ROW: ", row);
-      // console.log("AGS VALUE: ", row[6]);
+      //rows with municipality or district AGS
+      const ags = row[6]
+        ? String(row[6]).trim()
+        : row[5]
+          ? String(row[5]).trim()
+          : null;
+      if (!ags) continue;
 
       //store in mongodb
       inserted = await regionModel.updateOne(
-        { ags: String(row[6]).trim() },
+        { ags },
         {
           $set: {
             name: row[7],
@@ -47,13 +38,16 @@ export const runAgsImport = async () => {
           $setOnInsert: {
             region_id: uuid(),
             parent_region_id: null,
-            ags: String(row[6]).trim(),
+            ags: ags,
           },
         },
         { upsert: true },
       );
     }
-    console.log("Data collected successfully", inserted);
+
+    console.log("Data collected successfully", {
+      inserted,
+    });
   } catch (err) {
     console.error("Import failed", err);
   }
