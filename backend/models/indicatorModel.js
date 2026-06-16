@@ -6,7 +6,7 @@ const indicatorSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
-  code: { type: String, required: true },
+  code: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   unit: { type: String, required: true },
   source_system: { type: String, required: true },

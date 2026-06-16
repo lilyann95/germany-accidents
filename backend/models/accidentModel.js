@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const accidentSchema = mongoose.Schema({
   accident_id: {
-    type: mongoose.Schema.Types.UUID,
+    type: String,
     required: true,
     unique: true,
   },
