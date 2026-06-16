@@ -23,8 +23,8 @@ const AccidentCategory = () => {
   return (
     <>
       <div className="">
-        <h3>Accidents Type</h3>
-        <Dropdown item={data} width="w-30" />
+        <h3 className="text-sm text-gray-800 font-normal">Accidents Type</h3>
+        <Dropdown item={data} itemName={"All Categories"} width="w-48" />
       </div>
     </>
   );

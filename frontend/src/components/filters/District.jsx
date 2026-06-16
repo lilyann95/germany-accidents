@@ -21,8 +21,8 @@ const DistrictMunicipality = () => {
   return (
     <>
       <div className="">
-        <h3>District</h3>
-        <Dropdown item={data} />
+        <h3 className="text-sm text-gray-800 font-normal">District</h3>
+        <Dropdown item={data} itemName={"All"} />
       </div>
     </>
   );

@@ -4,14 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
-a:active {
-  background-color: #204161;
-  opacity: 0.5;
-}
-
 .main-content {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 2rem;
   margin-top: 2rem;
+  align-items: stretch;
 }

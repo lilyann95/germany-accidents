@@ -25,8 +25,8 @@ const Hour = () => {
   return (
     <>
       <div className="">
-        <h3>Hour</h3>
-        <Dropdown item={data} />
+        <h3 className="text-sm text-gray-800 font-normal">Hour</h3>
+        <Dropdown item={data} itemName={"All"} />
       </div>
     </>
   );

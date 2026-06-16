@@ -25,8 +25,8 @@ const WeekDay = () => {
   return (
     <>
       <div className="">
-        <h3>WeekDay</h3>
-        <Dropdown item={data} />
+        <h3 className="text-sm text-gray-800 font-normal">WeekDay</h3>
+        <Dropdown item={data} itemName={"All"} />
       </div>
     </>
   );

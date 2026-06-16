@@ -23,7 +23,7 @@ const StateSelect = () => {
   return (
     <>
       <div className="">
-        <h3>State</h3>
+        <h3 className="text-sm text-gray-800 font-normal">State</h3>
         <Dropdown item={data} />
       </div>
     </>

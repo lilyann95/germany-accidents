@@ -4,7 +4,7 @@ import { questions } from "./questions.js";
 const QuestionGrid = () => {
   return (
     <>
-      <div className="rounded-2xl shadow-md p-5 mb-5">
+      <div className="h-full rounded-2xl shadow-md p-5 mb-5">
         <h1 className="text-xl text-[#964b2b] font-bold">Choose a question</h1>
         <h5 className="text-md text-gray-600">
           Click on a question card below to see the answer and details

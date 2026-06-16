@@ -25,8 +25,8 @@ const YearSelect = () => {
   return (
     <>
       <div className="">
-        <h3>Year</h3>
-        <Dropdown item={data} />
+        <h3 className="text-sm text-gray-800 font-normal">Year</h3>
+        <Dropdown item={data} itemName={"All"} />
       </div>
     </>
   );

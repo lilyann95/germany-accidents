@@ -15,7 +15,7 @@ const Divider = () => (
 
 const Group = ({ title, children }) => (
   <div className="flex flex-col gap-2 w-full md:w-auto">
-    <h3 className="text-xs font-semibold text-gray-600 tracking-wide">
+    <h3 className="text-md font-semibold text-gray-600 tracking-wide">
       {title}
     </h3>
     <div className="flex flex-wrap items-center gap-2">{children}</div>
@@ -35,7 +35,6 @@ const FilterBar = () => {
 
         <Divider />
 
-        {/* Time */}
         <Group title="Time">
           <YearSelect />
           <MonthSelect />
@@ -45,14 +44,12 @@ const FilterBar = () => {
 
         <Divider />
 
-        {/* Flags */}
         <Group title="Flags">
           <AccidentTypeSelect />
           <Participant />
         </Group>
       </div>
 
-      {/* Reset button */}
       <div className="w-full md:w-auto flex md:items-start">
         <Button
           message="Reset Filters"

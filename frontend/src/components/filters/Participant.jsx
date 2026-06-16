@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Dropdown from "../common/Dropdown";
+
 const data = [
   { id: 1, title: "Baden-Württemberg" },
   { id: 2, title: "Bavaria" },
@@ -17,14 +19,24 @@ const data = [
   { id: 15, title: "Schleswig-Holstein" },
   { id: 16, title: "Thuringia" },
 ];
+
 const Participant = () => {
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
+
   return (
-    <>
-      <div className="">
-        <h3>Participants</h3>
-        <Dropdown item={data} width="w-30" />
-      </div>
-    </>
+    <div>
+      <h3 className="text-sm text-gray-800 font-normal">Participants</h3>
+
+      <Dropdown
+        item={data}
+        multiple={true}
+        itemName={"All Flags"}
+        badge={"p-1 bg-gray-100 rounded-full"}
+        value={selectedDistricts}
+        onChange={setSelectedDistricts}
+        width="w-30"
+      />
+    </div>
   );
 };
 
