@@ -19,12 +19,18 @@ const data = [
   { id: 16, title: "Thuringia" },
 ];
 
-const AccidentCategory = () => {
+const AccidentCategory = ({ value, onChange }) => {
   return (
     <>
       <div className="">
         <h3 className="text-sm text-gray-800 font-normal">Accidents Type</h3>
-        <Dropdown item={data} itemName={"All Categories"} width="w-48" />
+        <Dropdown
+          item={data}
+          itemName={"Categories"}
+          value={value}
+          onChange={onChange}
+          width="w-30"
+        />
       </div>
     </>
   );

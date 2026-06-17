@@ -17,12 +17,17 @@ const data = [
   { id: 15, title: "Schleswig-Holstein" },
   { id: 16, title: "Thuringia" },
 ];
-const DistrictMunicipality = () => {
+const DistrictMunicipality = ({ value, onChange }) => {
   return (
     <>
       <div className="">
         <h3 className="text-sm text-gray-800 font-normal">District</h3>
-        <Dropdown item={data} itemName={"All"} />
+        <Dropdown
+          item={data}
+          itemName={"All"}
+          value={value}
+          onChange={onChange}
+        />
       </div>
     </>
   );

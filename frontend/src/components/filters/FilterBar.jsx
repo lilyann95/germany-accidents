@@ -7,6 +7,8 @@ import MonthSelect from "./MonthSelect";
 import WeekDay from "./WeekDay";
 import Hour from "./Hour";
 import Participant from "./Participant";
+import { useState } from "react";
+
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 
 const Divider = () => (
@@ -23,30 +25,54 @@ const Group = ({ title, children }) => (
 );
 
 const FilterBar = () => {
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedWeekDay, setSelectedWeekDay] = useState(null);
+  const [selectedHour, setSelectedHour] = useState(null);
+  const [selectedAccidentType, setSelectedAccidentType] = useState(null);
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
+
+  const resetFilters = () => {
+    setSelectedState(null);
+    setSelectedDistricts([]);
+    setSelectedYear(null);
+    setSelectedMonth(null);
+    setSelectedWeekDay(null);
+    setSelectedHour(null);
+    setSelectedAccidentType(null);
+    setSelectedParticipants([]);
+  };
+
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 rounded-2xl shadow-md p-5 my-5">
-      {/* Filters */}
       <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 flex-1">
-        {/* Region */}
         <Group title="Region">
-          <StateSelect />
-          <District />
+          <StateSelect value={selectedState} onChange={setSelectedState} />
+          <District value={selectedDistricts} onChange={setSelectedDistricts} />
         </Group>
 
         <Divider />
 
         <Group title="Time">
-          <YearSelect />
-          <MonthSelect />
-          <WeekDay />
-          <Hour />
+          <YearSelect value={selectedYear} onChange={setSelectedYear} />
+          <MonthSelect value={selectedMonth} onChange={setSelectedMonth} />
+          <WeekDay value={selectedWeekDay} onChange={setSelectedWeekDay} />
+          <Hour value={selectedHour} onChange={setSelectedHour} />
         </Group>
 
         <Divider />
 
         <Group title="Flags">
-          <AccidentTypeSelect />
-          <Participant />
+          <AccidentTypeSelect
+            value={selectedAccidentType}
+            onChange={setSelectedAccidentType}
+          />
+          <Participant
+            value={selectedParticipants}
+            onChange={setSelectedParticipants}
+          />
         </Group>
       </div>
 
@@ -55,6 +81,7 @@ const FilterBar = () => {
           message="Reset Filters"
           icon={faArrowsRotate}
           className="w-full md:w-auto"
+          onClick={resetFilters}
         />
       </div>
     </div>

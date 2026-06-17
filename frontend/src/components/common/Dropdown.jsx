@@ -10,15 +10,18 @@ const Dropdown = ({
   badge,
   itemName,
   multiple = false,
-  value = multiple ? [] : null,
+  value,
   onChange,
 }) => {
-  const [tempSelected, setTempSelected] = useState(value);
   const [open, setOpen] = useState(false);
 
+  const selected = multiple ? (value ?? []) : value;
+
+  const displayLabel = multiple ? itemName : selected?.title || itemName;
+
   const isSelected = (id) => {
-    if (!multiple) return value?.id === id;
-    return tempSelected.includes(id);
+    if (!multiple) return selected?.id === id;
+    return selected.includes(id);
   };
 
   const toggleItem = (id) => {
@@ -27,14 +30,17 @@ const Dropdown = ({
       return;
     }
 
-    setTempSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+    const exists = selected.includes(id);
+
+    const updated = exists
+      ? selected.filter((x) => x !== id)
+      : [...selected, id];
+
+    onChange(updated);
   };
 
   const handleDone = () => {
-    const selectedItems = item.filter((i) => tempSelected.includes(i.id));
-    onChange(selectedItems);
+    onChange(selected);
   };
 
   return (
@@ -51,15 +57,13 @@ const Dropdown = ({
           width,
         )}
       >
-        <span>{itemName}</span>
+        <span>{displayLabel}</span>
 
         <span
           className={clsx("flex items-center gap-2 text-sm font-medium", badge)}
         >
-          {multiple && tempSelected.length > 0 ? (
-            <span className="text-xs text-gray-500">
-              +{tempSelected.length}
-            </span>
+          {multiple && selected.length > 0 ? (
+            <span className="text-xs text-gray-500">+{selected.length}</span>
           ) : (
             <FontAwesomeIcon icon={faChevronDown} />
           )}
@@ -110,7 +114,7 @@ const Dropdown = ({
                   handleDone();
                   close();
                 }}
-                className="w-full bg-[#204161] cursor-pointer text-white py-1 rounded-md hover:opacity-90"
+                className="w-full bg-[#964b2b] cursor-pointer text-white py-2 rounded-md hover:opacity-90"
               >
                 Done
               </button>
