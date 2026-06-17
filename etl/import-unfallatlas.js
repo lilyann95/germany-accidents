@@ -19,7 +19,7 @@ export const runUnfallatlasImport = async () => {
 
   try {
     const stream = fs
-      .createReadStream("./data/unfallorte2024_LinRef.csv")
+      .createReadStream("./data/unfallorte2023_LinRef.csv")
       .pipe(csv({ separator: ";" }));
 
     //Transform fields
@@ -49,7 +49,7 @@ export const runUnfallatlasImport = async () => {
 
       const lon = toNumber(row.XGCSWGS84);
       const lat = toNumber(row.YGCSWGS84);
-      // console.log("check: 5", lon, lat);
+
       if (!lat || !lon) continue;
 
       data = await accidentModel.updateOne(
@@ -77,13 +77,12 @@ export const runUnfallatlasImport = async () => {
 
       importedCount++;
     }
-    // console.log("check: 5");
     //write an ImportRun
     const importRun = await createImportRun({
       source: "Unfallatlas",
       importDate: new Date(),
       recordsImported: importedCount,
-      version: "2024",
+      version: Number(row.UJAHR),
       status: "success",
       durationMs: Date.now() - start,
     });
@@ -99,7 +98,7 @@ export const runUnfallatlasImport = async () => {
       source: "Unfallatlas",
       importDate: new Date(),
       recordsImported: importedCount,
-      version: "2024",
+      version: Number(row.UJAHR),
       status: "failed",
       durationMs: Date.now() - start,
       error: err.message,

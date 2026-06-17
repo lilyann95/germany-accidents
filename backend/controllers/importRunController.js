@@ -1,4 +1,4 @@
-import importRunModel from "../models/importRunModel";
+import importRunModel from "../models/importRunModel.js";
 
 export const getImportRuns = async (req, res) => {
   try {
@@ -9,7 +9,11 @@ export const getImportRuns = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Import-runs fetched successfully", importRuns });
+      .json({
+        message: "Import-runs fetched successfully",
+        data: importRuns,
+        meta: meta,
+      });
   } catch (error) {
     return res
       .status(500)

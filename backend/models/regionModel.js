@@ -8,6 +8,7 @@ const regionSchema = mongoose.Schema({
     default: null,
   },
   ags: { type: String, required: true },
+  state_name: { type: String, required: true },
   name: { type: String, required: true },
   level: { type: String, required: true },
   population: { type: Number, min: 0 },

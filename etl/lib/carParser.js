@@ -16,7 +16,7 @@ export function carsParser(rows, indicatorCode) {
 
     values.push({
       regionKey: String(ags).trim(),
-      year: null,
+      year: 2025,
       value,
     });
   }

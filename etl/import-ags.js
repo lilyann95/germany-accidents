@@ -17,7 +17,6 @@ export const runAgsImport = async () => {
     //Transform fields
     let inserted = {};
     for (const row of rows) {
-      //rows with municipality or district AGS
       const ags = row[6]
         ? String(row[6]).trim()
         : row[5]
@@ -31,6 +30,7 @@ export const runAgsImport = async () => {
         {
           $set: {
             name: row[7],
+            state_name: row[1],
             level: getLevel(row[4]),
             population: Number(row[14]) || null,
             geometry: {},
