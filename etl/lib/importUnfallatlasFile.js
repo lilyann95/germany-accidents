@@ -75,21 +75,16 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
 
     const allFiles = findFiles(extractDir);
 
-    const csvFiles = allFiles.find((f) => f.toLowerCase().endsWith(".csv"));
+    const csvPath =
+      allFiles.find((f) => f.toLowerCase().endsWith(".csv")) ||
+      allFiles.find((f) => f.toLowerCase().endsWith(".txt"));
 
-    // const csvFiles = extractedFiles.filter((f) =>
-    //   f.toLowerCase().endsWith(".csv"),
-    // );
-
-    const csvFileName =
-      csvFiles.find((f) => f.toLowerCase().includes("unfallorte")) ||
-      csvPath[0];
-
-    if (!csvFileName) {
+    if (!csvPath) {
+      console.log("Files found:", allFiles);
       throw new Error(`No CSV found for ${dataset.name}`);
     }
 
-    const csvPath = `${csvDir}/${csvFileName}`; // console.log("extractedFiles", extractedFiles);
+    console.log("Using file:", csvPath);
 
     const stream = fs.createReadStream(csvPath).pipe(csv({ separator: ";" }));
 
