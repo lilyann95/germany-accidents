@@ -5,6 +5,7 @@ const accidentSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   region_id: {
     type: mongoose.Schema.Types.UUID,
