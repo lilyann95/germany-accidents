@@ -5,13 +5,7 @@ import regionModel from "../models/regionModel.js";
 
 export const getAnalysisTrafficRisk = async (req, res) => {
   try {
-    const { state_name, year } = req.query;
-
-    const regions = await regionModel.find({
-      state_name,
-    });
-
-    const regionIds = regions.map((r) => r.region_id);
+    const { year } = req.query;
 
     const carIndicator = await indicatorModel.findOne({
       code: "46251-0021",
@@ -21,7 +15,6 @@ export const getAnalysisTrafficRisk = async (req, res) => {
       {
         $match: {
           indicator_id: carIndicator.indicator_id,
-          region_id: { $in: regionIds },
         },
       },
       {
@@ -32,34 +25,47 @@ export const getAnalysisTrafficRisk = async (req, res) => {
       },
     ]);
 
-    const accidentCount = await accidentModel.countDocuments({
-      region_id: { $in: regionIds },
-      year: Number(year),
-    });
-
     const totalCars = carStats[0]?.totalCars || 0;
 
-    const result = totalCars > 0 ? (accidentCount / totalCars) * 100000 : 0;
+    const accidentStats = await accidentModel.aggregate([
+      {
+        $match: {
+          participants: "car",
+        },
+      },
+      {
+        $group: {
+          _id: "$year",
+          accidentCount: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
+    const result =
+      totalCars > 0
+        ? accidentStats.map((item) => ({
+            year: item._id,
+            accidents: item.accidentCount,
+            accidentsPer100kCars: Number(
+              ((item.accidentCount / totalCars) * 100000).toFixed(2),
+            ),
+          }))
+        : 0;
 
     return res.status(200).json({
-      state_name,
-      year,
-      accidents: accidentCount,
-      passengerCars: totalCars,
-      accidentsPer100kCars: Number(result.toFixed(2)),
+      result: result,
 
-      explanation: `Computed by dividing the number of recorded accidents in ${state_name} during ${year} by the number of registered passenger cars from GENESIS statistics and multiplying by 100,000.`,
+      explanation: `Computed by dividing the number of recorded accidents in per year by the number of registered passenger cars from GENESIS statistics and multiplying by 100,000.`,
 
-      licenses: [
-        {
-          source: "Unfallatlas",
-          license: "Data licence Germany Attribution 2.0",
-        },
-        {
-          source: "GENESIS",
-          license: "Data licence Germany Attribution 2.0",
-        },
-      ],
+      meta: {
+        source: "Unfallatlas & GENESIS",
+        license: "Data licence Germany Attribution 2.0",
+      },
     });
   } catch (error) {
     return res

@@ -1,14 +1,40 @@
+import { useState } from "react";
 import { FilterContext } from "./FilterContext";
-import { useLocation } from "react-router-dom";
 
 const FilterContextProvider = (props) => {
-  //   const [showSearch, setShowSearch] = useState(false);
-  const location = useLocation();
+  const [filters, setFilters] = useState({
+    Category: "",
+    participant: [],
+    year: 2024,
+    month: "",
+    hour: 23,
+    state: "",
+    weekDay: "",
+  });
+  const [showSearch, setShowSearch] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedState, setSelectedState] = useState("");
+  const [accidentCount, setAccidentCount] = useState(null);
+  const [answer, setAnswer] = useState(null);
 
   const value = {
-    // showSearch,
-    // setShowSearch,
-    location,
+    showSearch,
+    setShowSearch,
+
+    selectedYear,
+    setSelectedYear,
+
+    selectedState,
+    setSelectedState,
+
+    answer,
+    setAnswer,
+
+    filters,
+    setFilters,
+
+    accidentCount,
+    setAccidentCount,
   };
 
   return (

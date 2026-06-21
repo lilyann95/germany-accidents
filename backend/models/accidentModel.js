@@ -12,6 +12,7 @@ const accidentSchema = mongoose.Schema({
     ref: "region",
     required: true,
   },
+  ags: { type: String, required: true },
   year: { type: Number, required: true },
   month: { type: Number, required: true },
   hour: { type: Number, required: true },

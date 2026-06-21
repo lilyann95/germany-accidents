@@ -1,4 +1,6 @@
 import accidentModel from "../models/accidentModel.js";
+import regionModel from "../models/regionModel.js";
+import { STATE_SLUGS } from "../mapping/stateMapping.js";
 
 export const getMeta = async (req, res) => {
   try {
@@ -45,17 +47,17 @@ export const getMetaEarliestYear = async (req, res) => {
     ]);
 
     if (!result.length) {
-      return res.status(404).json({ message: "No data found" });
+      return res.status(200).json({ message: "No data found" });
     }
 
     return res.status(200).json({
-      earliestYear: result[0].earliestYear,
-      meta: [
-        {
-          source: "Unfallatlas",
-          license: "Data licence Germany Attribution 2.0",
-        },
-      ],
+      result: result[0].earliestYear,
+      meta: {
+        source: "Unfallatlas",
+        license: "Data licence Germany Attribution 2.0",
+      },
+      explanation:
+        "The dataset contains recorded traffic accidents in Germany starting from from the year 2021. There is no data available before this year",
     });
   } catch (error) {
     return res.status(500).json({
@@ -66,13 +68,28 @@ export const getMetaEarliestYear = async (req, res) => {
 
 export const getMetaRegionAvailability = async (req, res) => {
   try {
-    const { state_name } = req.query;
+    const { state } = req.params;
 
-    const match = {};
-    if (state_name) match.state_name = state_name;
+    const stateName = STATE_SLUGS[state];
+
+    if (!state) {
+      return res.status(200).json({
+        message: "Unknown state",
+      });
+    }
+
+    const regions = await regionModel
+      .find({ state_name: stateName })
+      .select("ags");
+
+    const agsList = regions.map((r) => r.ags);
 
     const result = await accidentModel.aggregate([
-      { $match: match },
+      {
+        $match: {
+          ags: { $in: agsList },
+        },
+      },
       {
         $group: {
           _id: null,
@@ -83,14 +100,18 @@ export const getMetaRegionAvailability = async (req, res) => {
     ]);
 
     if (!result.length) {
-      return res.status(404).json({ message: "No data found" });
+      return res.status(200).json({
+        message: "No data found",
+      });
     }
 
     return res.status(200).json({
-      data: {
-        region: state_name || "ALL",
-        availableFrom: result[0].availableFrom,
-        availableTo: result[0].availableTo,
+      result: result[0].availableFrom,
+      explanation:
+        "This is the region availability according to the stored dataset",
+      meta: {
+        source: "Unfallatlas",
+        license: "Data licence Germany Attribution 2.0",
       },
     });
   } catch (error) {

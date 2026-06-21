@@ -4,6 +4,7 @@ import { runUnfallatlasImport } from "./import-unfallatlas.js";
 import { populationParser } from "./lib/populationParser.js";
 import { carsParser } from "./lib/carParser.js";
 import connectMongoDB from "../backend/config/mongodb.js";
+import { checkCount } from "./check-count.js";
 
 const runImportAll = async () => {
   await connectMongoDB();
@@ -17,6 +18,7 @@ const runImportAll = async () => {
   //   parser: carsParser,
   // });
   await runUnfallatlasImport();
+  // await checkCount();
   console.log("Import finished");
 };
 

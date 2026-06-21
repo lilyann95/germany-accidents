@@ -9,6 +9,6 @@ const metadataRouter = express.Router();
 
 metadataRouter.get("/", getMeta);
 metadataRouter.get("/earliest-year", getMetaEarliestYear);
-metadataRouter.get(`/region/:state_name`, getMetaRegionAvailability);
+metadataRouter.get(`/region/:state`, getMetaRegionAvailability);
 
 export default metadataRouter;

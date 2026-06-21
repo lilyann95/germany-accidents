@@ -1,0 +1,18 @@
+export const STATE_SLUGS = {
+  "baden-wurttemberg": "Baden-Württemberg",
+  bayern: "Bayern",
+  berlin: "Berlin",
+  brandenburg: "Brandenburg",
+  bremen: "Bremen",
+  hamburg: "Hamburg",
+  hessen: "Hessen",
+  "Mecklenburg-Western-pomerania": "Mecklenburg-Vorpommern",
+  "lower-saxony": "Niedersachsen",
+  "North-rhine-Westphalia": "Nordrhein-Westfalen",
+  "rheinland-palatinate": "Rheinland-Pfalz",
+  saarland: "Saarland",
+  saxony: "Sachsen",
+  "saxony-anhalt": "Sachsen-Anhalt",
+  "schleswig-holstein": "Schleswig-Holstein",
+  thuringia: "Thüringen",
+};

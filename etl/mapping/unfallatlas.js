@@ -64,3 +64,22 @@ export const toNumber = (value) => {
   const n = Number(String(value).replace(",", "."));
   return Number.isFinite(n) ? n : null;
 };
+
+export const stateMap = {
+  "baden-wuerttemberg": "Baden-Württemberg",
+  bavaria: "Bayern",
+  berlin: "Berlin",
+  brandenburg: "Brandenburg",
+  bremen: "Bremen",
+  hamburg: "Hamburg",
+  hesse: "Hessen",
+  "lower-saxony": "Niedersachsen",
+  "mecklenburg-vorpommern": "Mecklenburg-Vorpommern",
+  "north-rhine-westphalia": "Nordrhein-Westfalen",
+  "rhineland-palatinate": "Rheinland-Pfalz",
+  saarland: "Saarland",
+  saxony: "Sachsen",
+  "saxony-anhalt": "Sachsen-Anhalt",
+  "schleswig-holstein": "Schleswig-Holstein",
+  thuringia: "Thüringen",
+};

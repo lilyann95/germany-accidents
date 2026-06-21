@@ -94,11 +94,19 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
     const operations = [];
 
     for await (const row of stream) {
+      // const ags =
+      //   row.ULAND +
+      //   row.UREGBEZ +
+      //   row.UKREIS.padStart(2, "0") +
+      //   row.UGEMEINDE.padStart(3, "0");
+
+      const normalize = (v, len) => String(v ?? "").padStart(len, "0");
+
       const ags =
-        row.ULAND +
-        row.UREGBEZ +
-        row.UKREIS.padStart(2, "0") +
-        row.UGEMEINDE.padStart(3, "0");
+        normalize(row.ULAND, 2) +
+        normalize(row.UREGBEZ, 1) +
+        normalize(row.UKREIS, 2) +
+        normalize(row.UGEMEINDE, 3);
 
       const region = regionMap.get(ags);
 
@@ -152,6 +160,7 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
               participants,
               lat,
               lon,
+              ags,
               region_id: region.region_id,
             },
             $setOnInsert: {

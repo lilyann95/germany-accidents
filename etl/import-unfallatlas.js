@@ -8,7 +8,12 @@ export const runUnfallatlasImport = async () => {
 
   const { datasets } = response.data;
 
-  for (const dataset of datasets) {
+  const selectedDatasets = datasets.filter((dataset) => {
+    const year = Number(dataset.name.match(/\d{4}/)?.[0]);
+    return year >= 2021;
+  });
+
+  for (const dataset of selectedDatasets) {
     const csvZip = dataset.files.find((f) => f.name.endsWith("_CSV.zip"));
 
     if (!csvZip) continue;
