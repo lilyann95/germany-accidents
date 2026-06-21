@@ -2,15 +2,6 @@ import { useState } from "react";
 import { FilterContext } from "./FilterContext";
 
 const FilterContextProvider = (props) => {
-  const [filters, setFilters] = useState({
-    Category: "",
-    participant: [],
-    year: 2024,
-    month: "",
-    hour: 23,
-    state: "",
-    weekDay: "",
-  });
   const [showSearch, setShowSearch] = useState(false);
   const [selectedYear, setSelectedYear] = useState(2024);
   const [selectedState, setSelectedState] = useState("");
@@ -29,9 +20,6 @@ const FilterContextProvider = (props) => {
 
     answer,
     setAnswer,
-
-    filters,
-    setFilters,
 
     accidentCount,
     setAccidentCount,

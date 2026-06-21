@@ -96,20 +96,6 @@ const FilterBar = () => {
     loadFilters();
   }, []);
 
-  // useEffect(() => {
-  //   if (!selectedState) {
-  //     setMunicipality([]);
-  //     return;
-  //   }
-
-  //   const loadMunicipality = async () => {
-  //     const response = await getmunicipality(selectedState);
-  //     setMunicipality(response.data.result);
-  //   };
-
-  //   loadMunicipality();
-  // }, [selectedState]);
-
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 rounded-2xl shadow-md p-5 my-5">
       <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 flex-1">
@@ -119,11 +105,6 @@ const FilterBar = () => {
             value={selectedState}
             onChange={setSelectedState}
           />
-          {/* <Municipality
-            options={municipality}
-            value={selectedMunicipality}
-            onChange={setSelectedMunicipality}
-          /> */}
         </Group>
 
         <Divider />

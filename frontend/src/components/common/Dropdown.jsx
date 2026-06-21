@@ -107,7 +107,6 @@ const Dropdown = ({
           ))}
         </div>
 
-        {/* Done button for multiselect */}
         {multiple && (
           <MenuItem>
             {({ close }) => (

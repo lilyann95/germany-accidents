@@ -49,8 +49,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* <hr className="my-5 border-gray-300" /> */}
-
         <p className="text-gray-600 text-sm text-center my-5">
           © 2026 Traffic Accident Query Service System. All rights reserved.
         </p>

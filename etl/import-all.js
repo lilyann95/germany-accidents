@@ -8,15 +8,15 @@ import { checkCount } from "./check-count.js";
 
 const runImportAll = async () => {
   await connectMongoDB();
-  // await runAgsImport();
-  // await runGenesisImport({
-  //   filepath: "./data/12411-0015_en.xlsx",
-  //   parser: populationParser,
-  // });
-  // await runGenesisImport({
-  //   filepath: "./data/46251-0021_en.xlsx",
-  //   parser: carsParser,
-  // });
+  await runAgsImport();
+  await runGenesisImport({
+    filepath: "./data/12411-0015_en.xlsx",
+    parser: populationParser,
+  });
+  await runGenesisImport({
+    filepath: "./data/46251-0021_en.xlsx",
+    parser: carsParser,
+  });
   await runUnfallatlasImport();
   // await checkCount();
   console.log("Import finished");

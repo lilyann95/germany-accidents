@@ -28,7 +28,6 @@ export const getmunicipality = async (req, res) => {
         level: "municipality",
       })
       .select("name");
-    console.log("wee", municipality);
 
     if (municipality.length === 0) {
       return res.status(200).json({ message: "No municipality found" });

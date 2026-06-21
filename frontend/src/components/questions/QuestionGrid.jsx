@@ -3,15 +3,6 @@ import QuestionCard from "./QuestionCard";
 import { questions } from "./questions.js";
 
 const QuestionGrid = () => {
-  /*
-  const [accidents, setAccidents] = useState([]);
-  const answerFn = async () => {
-    return await getAccidents();
-  };
-  useEffect(() => {
-    setAccidents(answerFn());
-  }, []);
-  */
   return (
     <>
       <div className="h-full rounded-2xl shadow-md p-5 mb-5">

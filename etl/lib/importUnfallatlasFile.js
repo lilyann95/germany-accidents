@@ -43,7 +43,6 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
       writer.on("error", reject);
     });
 
-    // console.log("dataset", dataset);
     // Extract ZIP
     const extractDir = `./downloads/${dataset.name}`;
 
@@ -51,10 +50,6 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
     zip.extractAllTo(extractDir, true);
 
     // Find CSV
-    // const csvDir = `${extractDir}/csv`;
-
-    // const extractedFiles = fs.readdirSync(csvDir);
-
     const findFiles = (dir) => {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -84,8 +79,6 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
       throw new Error(`No CSV found for ${dataset.name}`);
     }
 
-    console.log("Using file:", csvPath);
-
     const stream = fs.createReadStream(csvPath).pipe(csv({ separator: ";" }));
 
     const regions = await regionModel.find();
@@ -94,12 +87,6 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
     const operations = [];
 
     for await (const row of stream) {
-      // const ags =
-      //   row.ULAND +
-      //   row.UREGBEZ +
-      //   row.UKREIS.padStart(2, "0") +
-      //   row.UGEMEINDE.padStart(3, "0");
-
       const normalize = (v, len) => String(v ?? "").padStart(len, "0");
 
       const ags =
@@ -120,30 +107,6 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
       const participants = Object.entries(participantMap)
         .filter(([field]) => Number(row[field]) === 1)
         .map(([, value]) => value);
-      //   console.log("Hello11");
-
-      //   await accidentModel.updateOne(
-      //     { accident_id: row.UIDENTSTLAE },
-      //     {
-      //       $set: {
-      //         year: Number(row.UJAHR),
-      //         month: Number(row.UMONAT),
-      //         hour: Number(row.USTUNDE),
-      //         weekday: weekdayMap[row.UWOCHENTAG],
-      //         category: categoryMap[row.UKATEGORIE],
-      //         type: typeMap[row.UART],
-      //         light: lightMap[row.ULICHTVERH],
-      //         participants,
-      //         lat,
-      //         lon,
-      //         region_id: region.region_id,
-      //       },
-      //       $setOnInsert: {
-      //         accident_id: row.UIDENTSTLAE,
-      //       },
-      //     },
-      //     { upsert: true },
-      //   );
 
       operations.push({
         updateOne: {
@@ -197,10 +160,7 @@ export const importUnfallatlasFile = async (dataset, csvZip) => {
       status: "success",
       durationMs: Date.now() - start,
     });
-
-    console.log(`${year}: ${importedCount} accidents imported`);
   } catch (err) {
-    console.log("Hello");
     const year = dataset.name.match(/\d{4}/)?.[0];
 
     await createImportRun({
