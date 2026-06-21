@@ -13,3 +13,18 @@ export const getRegionMeta = (state) => API.get(`/meta/region/:${state}`);
 
 export const getAnalysisTrafficRisk = () =>
   API.get("/analysis/accidents-per-100k-cars");
+
+//Filters
+export const getStates = () => API.get("/filters/states");
+
+export const getmunicipality = (state) =>
+  API.get(`/filters/districts?state=${state}`);
+
+export const getYears = () => API.get("/filters/years");
+
+export const getCategories = () => API.get("/filters/categories");
+
+export const getParticipants = () => API.get("/filters/participants");
+
+export const getFilterAccidentCount = (params) =>
+  API.get("/filters/count", { params });

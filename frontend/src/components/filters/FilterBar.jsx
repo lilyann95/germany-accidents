@@ -1,5 +1,6 @@
+import { useState, useEffect, useContext } from "react";
 import Button from "../common/Button";
-import District from "./District";
+import Municipality from "./Municipality.jsx";
 import AccidentTypeSelect from "./AccidentCategory";
 import StateSelect from "./StateSelect";
 import YearSelect from "./YearSelect";
@@ -7,9 +8,16 @@ import MonthSelect from "./MonthSelect";
 import WeekDay from "./WeekDay";
 import Hour from "./Hour";
 import Participant from "./Participant";
-import { useState } from "react";
-
-import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { faArrowsRotate, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  getStates,
+  getYears,
+  getmunicipality,
+  getCategories,
+  getParticipants,
+  getFilterAccidentCount,
+} from "../../services/api.js";
+import { FilterContext } from "../../context/FilterContext.jsx";
 
 const Divider = () => (
   <div className="hidden md:block w-px self-stretch bg-gray-300" />
@@ -25,38 +33,107 @@ const Group = ({ title, children }) => (
 );
 
 const FilterBar = () => {
-  const [selectedState, setSelectedState] = useState(null);
-  const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const { answer, setAnswer } = useContext(FilterContext);
+  //Available options
+  const [states, setStates] = useState([]);
+  const [years, setYears] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [participants, setParticipants] = useState([]);
+  const [municipality, setMunicipality] = useState([]);
+
+  //Current option
+  const [selectedState, setSelectedState] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedWeekDay, setSelectedWeekDay] = useState(null);
+  const [selectedMunicipality, setSelectedMunicipality] = useState([]);
   const [selectedHour, setSelectedHour] = useState(null);
   const [selectedAccidentType, setSelectedAccidentType] = useState(null);
   const [selectedParticipants, setSelectedParticipants] = useState([]);
 
+  const showResults = async () => {
+    const response = await getFilterAccidentCount({
+      state: selectedState,
+      year: selectedYear,
+      category: selectedAccidentType,
+      participants: selectedParticipants.join(","),
+    });
+    setAnswer({ response: response.data });
+  };
+
   const resetFilters = () => {
+    setSelectedAccidentType(null);
+    setSelectedParticipants([]);
     setSelectedState(null);
-    setSelectedDistricts([]);
+    setSelectedMunicipality([]);
     setSelectedYear(null);
     setSelectedMonth(null);
     setSelectedWeekDay(null);
     setSelectedHour(null);
-    setSelectedAccidentType(null);
-    setSelectedParticipants([]);
   };
+
+  useEffect(() => {
+    const loadFilters = async () => {
+      try {
+        const [statesRes, yearsRes, categoriesRes, participantsRes] =
+          await Promise.all([
+            getStates(),
+            getYears(),
+            getCategories(),
+            getParticipants(),
+          ]);
+
+        setStates(statesRes.data.result);
+        setYears(yearsRes.data.result);
+
+        setCategories(categoriesRes.data.result);
+        setParticipants(participantsRes.data.result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadFilters();
+  }, []);
+
+  // useEffect(() => {
+  //   if (!selectedState) {
+  //     setMunicipality([]);
+  //     return;
+  //   }
+
+  //   const loadMunicipality = async () => {
+  //     const response = await getmunicipality(selectedState);
+  //     setMunicipality(response.data.result);
+  //   };
+
+  //   loadMunicipality();
+  // }, [selectedState]);
 
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 rounded-2xl shadow-md p-5 my-5">
       <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 flex-1">
         <Group title="Region">
-          <StateSelect value={selectedState} onChange={setSelectedState} />
-          <District value={selectedDistricts} onChange={setSelectedDistricts} />
+          <StateSelect
+            options={states}
+            value={selectedState}
+            onChange={setSelectedState}
+          />
+          {/* <Municipality
+            options={municipality}
+            value={selectedMunicipality}
+            onChange={setSelectedMunicipality}
+          /> */}
         </Group>
 
         <Divider />
 
         <Group title="Time">
-          <YearSelect value={selectedYear} onChange={setSelectedYear} />
+          <YearSelect
+            options={years}
+            value={selectedYear}
+            onChange={setSelectedYear}
+          />
           <MonthSelect value={selectedMonth} onChange={setSelectedMonth} />
           <WeekDay value={selectedWeekDay} onChange={setSelectedWeekDay} />
           <Hour value={selectedHour} onChange={setSelectedHour} />
@@ -66,10 +143,12 @@ const FilterBar = () => {
 
         <Group title="Flags">
           <AccidentTypeSelect
+            options={categories}
             value={selectedAccidentType}
             onChange={setSelectedAccidentType}
           />
           <Participant
+            options={participants}
             value={selectedParticipants}
             onChange={setSelectedParticipants}
           />
@@ -77,6 +156,12 @@ const FilterBar = () => {
       </div>
 
       <div className="w-full md:w-auto flex md:items-start">
+        <Button
+          message="Results"
+          icon={faArrowDown}
+          className="w-full md:w-auto"
+          onClick={showResults}
+        />
         <Button
           message="Reset Filters"
           icon={faArrowsRotate}

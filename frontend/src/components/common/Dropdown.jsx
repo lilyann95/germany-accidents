@@ -17,16 +17,18 @@ const Dropdown = ({
 
   const selected = multiple ? (value ?? []) : value;
 
-  const displayLabel = multiple ? itemName : selected?.title || itemName;
+  const safeItems = Array.isArray(item) ? item : [];
+
+  const displayLabel = multiple ? itemName : selected || itemName;
 
   const isSelected = (id) => {
-    if (!multiple) return selected?.id === id;
+    if (!multiple) return selected === id;
     return selected.includes(id);
   };
 
   const toggleItem = (id) => {
     if (!multiple) {
-      onChange(item.find((i) => i.id === id));
+      onChange(id);
       return;
     }
 
@@ -72,33 +74,33 @@ const Dropdown = ({
 
       <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5">
         <div className="py-1 max-h-60 overflow-y-auto">
-          {item.map((a) => (
-            <MenuItem key={a.id}>
+          {safeItems.map((a, index) => (
+            <MenuItem key={index}>
               {() => (
                 <button
                   onClick={(e) => {
                     if (multiple) {
                       e.preventDefault();
                       e.stopPropagation();
-                      toggleItem(a.id);
+                      toggleItem(a);
                     } else {
-                      toggleItem(a.id);
+                      toggleItem(a);
                     }
                   }}
                   className={clsx(
                     "block w-full text-left px-4 py-2 text-sm hover:bg-gray-100",
-                    isSelected(a.id) && "bg-gray-100 font-medium",
+                    isSelected(a) && "bg-gray-100 font-medium",
                   )}
                 >
                   {multiple && (
                     <input
                       type="checkbox"
-                      checked={isSelected(a.id)}
+                      checked={isSelected(a)}
                       readOnly
                       className="mr-2"
                     />
                   )}
-                  {a.title}
+                  {a}
                 </button>
               )}
             </MenuItem>

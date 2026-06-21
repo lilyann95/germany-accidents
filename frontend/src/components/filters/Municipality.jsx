@@ -1,10 +1,10 @@
 import Dropdown from "../common/Dropdown";
 
-const YearSelect = ({ value, onChange, options }) => {
+const Municipality = ({ value, onChange, options }) => {
   return (
     <>
       <div className="">
-        <h3 className="text-sm text-gray-800 font-normal">Year</h3>
+        <h3 className="text-sm text-gray-800 font-normal">Municipality</h3>
         <Dropdown
           item={options}
           itemName={"All"}
@@ -16,4 +16,4 @@ const YearSelect = ({ value, onChange, options }) => {
   );
 };
 
-export default YearSelect;
+export default Municipality;
