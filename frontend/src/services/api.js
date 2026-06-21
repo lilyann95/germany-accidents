@@ -21,6 +21,9 @@ export const getmunicipality = (state) =>
   API.get(`/filters/districts?state=${state}`);
 
 export const getYears = () => API.get("/filters/years");
+export const getMonth = () => API.get("/filters/month");
+export const getWeekDay = () => API.get("/filters/weekday");
+export const getHours = () => API.get("/filters/hours");
 
 export const getCategories = () => API.get("/filters/categories");
 

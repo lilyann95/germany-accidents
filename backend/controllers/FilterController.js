@@ -1,5 +1,6 @@
 import regionModel from "../models/regionModel.js";
 import accidentModel from "../models/accidentModel.js";
+import { monthMap, weekdayMap } from "../mapping/stateMapping.js";
 
 export const getStates = async (req, res) => {
   try {
@@ -62,6 +63,76 @@ export const getYears = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: error.message || "Error fetching years",
+    });
+  }
+};
+
+export const getMonth = async (req, res) => {
+  try {
+    const months = await accidentModel.distinct("month");
+
+    if (months.length === 0) {
+      return res.status(200).json({
+        message: "No months found",
+      });
+    }
+
+    const response = months
+      .sort((a, b) => a - b)
+      .map((month) => monthMap[month]);
+
+    console.log("1", response);
+
+    res.status(200).json({
+      result: response,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Error fetching months",
+    });
+  }
+};
+
+export const getWeekDay = async (req, res) => {
+  try {
+    const weekDay = await accidentModel.distinct("weekday");
+
+    if (weekDay.length === 0) {
+      return res.status(200).json({
+        message: "No weekDays found",
+      });
+    }
+
+    console.log("1", weekDay);
+
+    res.status(200).json({
+      result: weekDay.sort(),
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Error fetching weekDays",
+    });
+  }
+};
+
+export const getHours = async (req, res) => {
+  try {
+    const Hours = await accidentModel.distinct("hour");
+
+    if (Hours.length === 0) {
+      return res.status(200).json({
+        message: "No Hours found",
+      });
+    }
+
+    console.log("1", Hours);
+
+    res.status(200).json({
+      result: Hours.sort(),
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Error fetching Hours",
     });
   }
 };

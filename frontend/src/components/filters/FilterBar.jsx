@@ -12,10 +12,13 @@ import { faArrowsRotate, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import {
   getStates,
   getYears,
+  getMonth,
   getmunicipality,
   getCategories,
   getParticipants,
   getFilterAccidentCount,
+  getWeekDay,
+  getHours,
 } from "../../services/api.js";
 import { FilterContext } from "../../context/FilterContext.jsx";
 
@@ -37,6 +40,9 @@ const FilterBar = () => {
   //Available options
   const [states, setStates] = useState([]);
   const [years, setYears] = useState([]);
+  const [hours, setHours] = useState([]);
+  const [months, setMonths] = useState([]);
+  const [weekdays, setWeekDays] = useState([]);
   const [categories, setCategories] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [municipality, setMunicipality] = useState([]);
@@ -75,17 +81,30 @@ const FilterBar = () => {
   useEffect(() => {
     const loadFilters = async () => {
       try {
-        const [statesRes, yearsRes, categoriesRes, participantsRes] =
-          await Promise.all([
-            getStates(),
-            getYears(),
-            getCategories(),
-            getParticipants(),
-          ]);
+        const [
+          statesRes,
+          yearsRes,
+          monthRes,
+          hoursRes,
+          weekDayRes,
+          categoriesRes,
+          participantsRes,
+        ] = await Promise.all([
+          getStates(),
+          getYears(),
+          getMonth(),
+          getWeekDay(),
+          getHours(),
+          getCategories(),
+          getParticipants(),
+        ]);
 
         setStates(statesRes.data.result);
         setYears(yearsRes.data.result);
-
+        setMonths(monthRes.data.result);
+        setHours(hoursRes.data.result);
+        setWeekDays(weekDayRes.data.result);
+        console.log("hours", hoursRes.data.result);
         setCategories(categoriesRes.data.result);
         setParticipants(participantsRes.data.result);
       } catch (error) {
@@ -115,9 +134,21 @@ const FilterBar = () => {
             value={selectedYear}
             onChange={setSelectedYear}
           />
-          <MonthSelect value={selectedMonth} onChange={setSelectedMonth} />
-          <WeekDay value={selectedWeekDay} onChange={setSelectedWeekDay} />
-          <Hour value={selectedHour} onChange={setSelectedHour} />
+          <MonthSelect
+            options={months}
+            value={selectedMonth}
+            onChange={setSelectedMonth}
+          />
+          <WeekDay
+            options={weekdays}
+            value={selectedWeekDay}
+            onChange={setSelectedWeekDay}
+          />
+          <Hour
+            options={hours}
+            value={selectedHour}
+            onChange={setSelectedHour}
+          />
         </Group>
 
         <Divider />
