@@ -1,6 +1,10 @@
 import regionModel from "../models/regionModel.js";
 import accidentModel from "../models/accidentModel.js";
-import { monthMap, weekdayMap } from "../mapping/stateMapping.js";
+import {
+  monthMap,
+  weekdayMap,
+  monthNumberMap,
+} from "../mapping/stateMapping.js";
 
 export const getStates = async (req, res) => {
   try {
@@ -81,8 +85,6 @@ export const getMonth = async (req, res) => {
       .sort((a, b) => a - b)
       .map((month) => monthMap[month]);
 
-    console.log("1", response);
-
     res.status(200).json({
       result: response,
     });
@@ -103,8 +105,6 @@ export const getWeekDay = async (req, res) => {
       });
     }
 
-    console.log("1", weekDay);
-
     res.status(200).json({
       result: weekDay.sort(),
     });
@@ -124,8 +124,6 @@ export const getHours = async (req, res) => {
         message: "No Hours found",
       });
     }
-
-    console.log("1", Hours);
 
     res.status(200).json({
       result: Hours.sort(),
@@ -179,6 +177,7 @@ export const getFilterAccidentCount = async (req, res) => {
       year,
       month,
       hour,
+      weekday,
       category,
       light,
       participants,
@@ -196,20 +195,12 @@ export const getFilterAccidentCount = async (req, res) => {
       filter.ags = { $in: agsList };
     }
 
-    // if (municipality) {
-    //   const regions = await regionModel
-    //     .find({ name: municipality })
-    //     .select("ags");
-
-    //   const agsList = regions.map((r) => r.ags);
-
-    //   filter.ags = { $in: agsList };
-    // }
-
     if (year) filter.year = Number(year);
-    if (month) filter.month = Number(month);
+    if (month) {
+      filter.month = monthNumberMap[month];
+    }
     if (hour) filter.hour = Number(hour);
-
+    if (weekday) filter.weekday = weekday;
     if (category) filter.category = category;
     if (light) filter.light = light;
 
@@ -225,6 +216,7 @@ export const getFilterAccidentCount = async (req, res) => {
       explanation: `There are ${count} accidents for selected filters`,
       meta: {
         source: "Unfallatlas",
+        license: "Data licence Germany Attribution 2.0",
       },
     });
   } catch (error) {

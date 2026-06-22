@@ -61,6 +61,9 @@ const FilterBar = () => {
     const response = await getFilterAccidentCount({
       state: selectedState,
       year: selectedYear,
+      month: selectedMonth,
+      weekday: selectedWeekDay,
+      hour: selectedHour,
       category: selectedAccidentType,
       participants: selectedParticipants.join(","),
     });
@@ -85,8 +88,8 @@ const FilterBar = () => {
           statesRes,
           yearsRes,
           monthRes,
-          hoursRes,
           weekDayRes,
+          hoursRes,
           categoriesRes,
           participantsRes,
         ] = await Promise.all([
@@ -104,7 +107,6 @@ const FilterBar = () => {
         setMonths(monthRes.data.result);
         setHours(hoursRes.data.result);
         setWeekDays(weekDayRes.data.result);
-        console.log("hours", hoursRes.data.result);
         setCategories(categoriesRes.data.result);
         setParticipants(participantsRes.data.result);
       } catch (error) {
