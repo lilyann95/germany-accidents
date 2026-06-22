@@ -1,501 +1,542 @@
-# German Road Accident Analytics Platform
+# German Traffic Accident Analysis Platform
 
-## Overview
+## 1. Project Overview
 
-This project is a full-stack web application for exploring and analyzing German road accident data published through the German Federal Statistical Office's Unfallatlas dataset.
+This project is a full-stack web application for exploring and analyzing traffic accident data in Germany. It combines official German open datasets from Unfallatlas, GENESIS, and the German Municipality Directory (GV-ISys) to provide accident statistics, regional filtering, and risk indicators.
 
-The application enables users to:
+The application allows users to:
 
-- Explore accident records across Germany.
-- Filter accidents by state, municipality, year, month, weekday, hour, accident category, and participant type.
-- View accident counts for selected criteria.
-- Access metadata about available datasets and regions.
+- Explore traffic accidents by region and time period.
+- Filter accidents by state, municipality, month, weekday, hour, category, and participant type.
+- Retrieve metadata about dataset availability.
+- Compare accident risk across regions using registered vehicle statistics.
+- Analyze accidents in relation to population and vehicle ownership.
 
-The platform is designed to make large-scale accident data more accessible through an interactive user interface and a REST API.
+The system consists of:
 
----
-
-## Features
-
-### Regional Filtering
-
-Users can filter accident data by:
-
-- Federal State (Bundesland)
-
-### Time Filtering
-
-Users can analyze accidents by:
-
-- Year
-- Month
-- Weekday
-- Hour
-
-### Accident Characteristics
-
-Filtering is available for:
-
-- Accident category
-- Time conditions
-- Road user participation
-
-Examples:
-
-- Car accidents
-- Motorcycle accidents
-- Bicycle accidents
-- Pedestrian accidents
-- Heavy vehicle accidents
-
-### Analytics
-
-The platform supports:
-
-- Accident count queries
-- Region-based statistics
-- Dataset availability checks
+- React frontend
+- Express.js REST API
+- MongoDB database
+- Automated data import scripts
 
 ---
 
-## Dataset
+# 2. Technologies Used
 
-Source:
-
-Unfallatlas (German Federal Statistical Office)
-
-License:
-
-Data licence Germany Attribution 2.0
-
-The imported dataset contains:
-
-- Accident ID
-- Geographic coordinates
-- Accident category
-- Accident type
-- Participants involved
-- Light conditions
-- Time information
-- Region references
-
----
-
-## System Architecture
-
-### Frontend
-
-The frontend is built using React and provides an interactive filtering and visualization interface.
-
-Responsibilities:
-
-- Fetch filter options
-- Display accident statistics
-- Handle user interactions
-- Manage application state
-
-### Backend
-
-The backend is built with Node.js and Express.
-
-Responsibilities:
-
-- Serve REST API endpoints
-- Process accident filters
-- Aggregate accident statistics
-- Manage metadata queries
-- Communicate with MongoDB
-
-### Database
-
-MongoDB stores:
-
-- Accident records
-- Region metadata
-- Import run information
-- Indicators
-- Indicator values
-
----
-
-## Technology Stack
-
-### Frontend
+## Frontend
 
 - React
-- Vite
 - Axios
 - Tailwind CSS
 - Headless UI
 - Font Awesome
 
-### Backend
+## Backend
 
 - Node.js
 - Express.js
 - Mongoose
 
-### Database
+## Database
 
 - MongoDB
 
-### Data Processing
+## Development Environment
 
-- CSV Parsing
-- UUID Generation
-- Bulk MongoDB Operations
+Minimum Requirements:
 
-### Development Tools
+- Node.js 18+
+- MongoDB 7+
+- Modern Web Browser
+  - Chrome 120+
+  - Firefox 120+
+  - Edge 120+
 
-- Git
-- GitHub
-- npm
-
----
-
-## Database Structure
-
-### Regions Collection
-
-Example:
-
-```json
-{
-  "_id": {
-    "$oid": "6a37f4e2bd99ff7438c0d96a"
-  },
-  "ags": "07143295",
-  "__v": 0,
-  "geometry": {},
-  "level": "municipality",
-  "name": "Stein-Neukirch",
-  "parent_region_id": null,
-  "population": 442,
-  "region_id": {
-    "$uuid": "8ef7f705-0242-49dd-8571-4a03f06d868f"
-  },
-  "state_name": "Rheinland-Pfalz"
-}
-```
-
-### Accidents Collection
-
-Example:
-
-```json
-{
-  "_id": {
-    "$oid": "6a37fc6ebd99ff7438c2596f"
-  },
-  "accident_id": "01240525161013252024",
-  "__v": 0,
-  "ags": "01062004",
-  "category": "Minor Injury Accident",
-  "hour": 14,
-  "lat": 53.80758155500007,
-  "light": "Unknown",
-  "lon": 10.388050921000058,
-  "month": 5,
-  "participants": ["car"],
-  "region_id": {
-    "$uuid": "438bcc47-d31d-441e-834e-e981c27f64f5"
-  },
-  "type": "Collision with Vehicle Ahead or Waiting",
-  "weekday": "Saturday",
-  "year": 2024
-}
-```
-
-### ImportRuns Collection
-
-Example:
-
-```json
-{
-  "_id": {
-    "$oid": "6a303ebca77843127b46b38f"
-  },
-  "source": "Unfallatlas",
-  "importDate": {
-    "$date": "2026-06-15T18:04:44.406Z"
-  },
-  "recordsImported": 248599,
-  "version": "2024",
-  "status": "success",
-  "durationMs": "9836992",
-  "__v": 0
-}
-```
-
-### Indicators Collection
-
-Example:
-
-```json
-{
-  "_id": {
-    "$oid": "6a30183f5038406e4fff1aa9"
-  },
-  "code": "46251-0021",
-  "__v": 0,
-  "indicator_id": {
-    "$uuid": "dde65a22-a31c-4a58-b511-fc755a186b5d"
-  },
-  "name": "Passenger cars",
-  "source_system": "GENESIS",
-  "unit": "number"
-}
-```
-
-### Indicators Value Collection
-
-Example:
-
-```json
-{
-  "_id": {
-    "$oid": "6a3017ec5038406e4fff127d"
-  },
-  "indicator_id": {
-    "$uuid": "87e1db30-ead4-44cc-a203-a6470b025011"
-  },
-  "region_id": {
-    "$uuid": "84105ffc-5627-4131-a59c-0768693010b7"
-  },
-  "year": 2022,
-  "__v": 0,
-  "value": 250064
-}
-```
+The application has been developed and tested on Windows 11.
 
 ---
 
-## API Endpoints
+# 3. Data Sources
 
-### Filters
+The project uses official German open data.
 
-#### Get States
+## 1. Unfallatlas
 
-```http
-GET /api/filters/states
-```
+Source:
 
-#### Get Years
+https://www.opengeodata.nrw.de/produkte/transport_verkehr/unfallatlas/
 
-```http
-GET /api/filters/years
-```
+Purpose:
 
-#### Get Categories
+- Traffic accident records
+- Accident categories
+- Participant information
+- Time information
+- Geographic coordinates
 
-```http
-GET /api/filters/categories
-```
+Imported into:
 
-#### Get Participants
-
-```http
-GET /api/filters/participants
-```
+- accidents collection
 
 ---
 
-### Accident Queries
+## 2. GENESIS Population Statistics
 
-#### Get Accident Count
+Source:
 
-```http
-GET /api/accidents/count
-```
+https://www-genesis.destatis.de/datenbank/online
+
+Dataset:
+
+12411-0015
+
+Purpose:
+
+- Population by region
+
+Imported into:
+
+- indicators collection
+- indicatorValues collection
+
+Indicator:
+
+Population
+
+---
+
+## 3. GENESIS Vehicle Statistics
+
+Source:
+
+https://www-genesis.destatis.de/datenbank/online
+
+Dataset:
+
+46251-0021
+
+Purpose:
+
+- Registered passenger cars
+
+Imported into:
+
+- indicators collection
+- indicatorValues collection
+
+Indicator:
+
+Passenger Cars
+
+---
+
+## 4. German Municipality Directory (GV-ISys)
+
+Source:
+
+https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/
+
+Purpose:
+
+- Administrative regions
+- AGS codes
+- State information
+- Municipalities
+- Districts
+
+Imported into:
+
+- regions collection
+
+---
+
+# 4. Database Structure
+
+The database consists of five collections.
+
+## Regions
+
+Stores German administrative regions.
+
+Fields:
+
+- region_id
+- parent_region_id
+- ags
+- state_name
+- name
+- level
+- population
+- geometry
+
+Administrative levels:
+
+- municipality
+- district
+- office
+- other
+
+---
+
+## Accidents
+
+Stores imported Unfallatlas accident records.
+
+Fields:
+
+- accident_id
+- region_id
+- ags
+- year
+- month
+- hour
+- weekday
+- category
+- type
+- light
+- participants
+- lon
+- lat
+
+---
+
+## Indicators
+
+Stores metadata about imported indicators.
+
+Examples:
+
+- Population
+- Passenger Cars
+
+Fields:
+
+- indicator_id
+- code
+- name
+- unit
+- source_system
+
+---
+
+## Indicator Values
+
+Stores regional indicator values.
+
+Fields:
+
+- region_id
+- indicator_id
+- year
+- value
 
 Example:
 
-```http
-GET /api/accidents/count?state=Sachsen&year=2023
-```
-
-Example:
-
-```http
-GET /api/accidents/count?state=Berlin&year=2023&participants=pedestrian
-```
+Population of a state in 2022.
 
 ---
 
-### Metadata
+## Import Runs
 
-#### Earliest Available Year
+Stores import history.
 
-```http
-GET /api/meta/earliest-year
-```
+Fields:
 
-#### Region Availability
+- source
+- importDate
+- recordsImported
+- version
+- status
+- durationMs
+- error
 
-```http
-GET /api/meta/region/:state
-```
+Purpose:
 
-Example:
-
-```http
-GET /api/meta/region/Sachsen
-```
-
----
-
-## Installation
-
-### Clone Repository
-
-```bash
-git clone <repository-url>
-```
-
-### Backend
-
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
+- Audit imports
+- Track failures
+- Record dataset versions
 
 ---
 
-## Environment Variables
+# 5. Data Import
 
-Backend:
+The database itself is not submitted.
 
-```env
-PORT=5000
-MONGODB_URI=your_connection_string
+Instead, import scripts are provided.
+
+The following scripts must be executed before starting the application.
+
+## Import Regions
+
+```javascript
+await runAgsImport();
 ```
 
-Frontend:
+Imports:
 
-```env
-VITE_API_URL=http://localhost:5000/api
-```
+- States
+- Districts
+- Municipalities
+- AGS codes
 
 ---
 
-## Running the Application
+## Import Population Statistics
 
-Backend:
-
-```bash
-npm run dev
+```javascript
+await runGenesisImport({
+  filepath: "./data/12411-0015_en.xlsx",
+  parser: populationParser,
+});
 ```
 
-Frontend:
+Imports:
 
-```bash
-npm run dev
+- Population indicator values
+
+---
+
+## Import Passenger Car Statistics
+
+```javascript
+await runGenesisImport({
+  filepath: "./data/46251-0021_en.xlsx",
+  parser: carsParser,
+});
 ```
 
-Application:
+Imports:
+
+- Registered passenger cars
+
+---
+
+## Import Accident Data
+
+```javascript
+await runUnfallatlasImport();
+```
+
+Imports:
+
+- Traffic accidents
+- Participants
+- Coordinates
+- Time information
+
+---
+
+# 6. REST API
+
+## Metadata
+
+### Earliest Available Year
+
+GET
 
 ```text
-Frontend: http://localhost:5173
-Backend: http://localhost:5000
+/api/meta/earliest-year
+```
+
+Returns:
+
+- First available accident year
+
+---
+
+### Region Availability
+
+GET
+
+```text
+/api/meta/region/:state
+```
+
+Returns:
+
+- Available years for a specific state
+
+---
+
+## Accident Queries
+
+### Accident Count
+
+GET
+
+```text
+/api/accidents/count
+```
+
+Supported parameters:
+
+- state_name
+- year
+- month
+- hour
+- weekday
+- category
+- participants
+
+Example:
+
+```text
+/api/accidents/count?state_name=Sachsen&year=2023
 ```
 
 ---
 
-## Design Decisions
+## Analysis
 
-### Why AGS is Used
+### Accidents per 100,000 Cars
 
-AGS (Amtlicher Gemeindeschlüssel) is used as the regional reference because:
+GET
 
-- It is present in both accident and region datasets.
-- It provides stable geographic identification.
-- It avoids UUID matching issues between collections.
+```text
+/api/analysis/accidents-per-100k-cars
+```
 
-### Why Separate Region and Accident Collections
+Combines:
 
-Benefits:
+- Accident data
+- Passenger car statistics
 
-- Reduced duplication
-- Easier maintenance
-- Better scalability
-- Cleaner filtering logic
+This endpoint satisfies the requirement of using multiple datasets.
 
 ---
 
-## Dos
+## Filters
 
-### Data
+### States
 
-- Use AGS as the geographic join key.
-- Validate imported accident data.
-- Use bulk operations when importing large datasets.
+```text
+/api/filters/states
+```
 
-### Backend
+### Years
 
-- Keep API responses consistent.
-- Return predictable JSON structures.
-- Validate query parameters.
+```text
+/api/filters/years
+```
 
-### Frontend
+### Months
 
-- Handle empty API responses gracefully.
-- Use loading states.
-- Validate user selections before requests.
+```text
+/api/filters/month
+```
 
-### Database
+### Weekdays
 
-- Create indexes for:
-  - ags
-  - year
-  - category
-  - participants
+```text
+/api/filters/weekday
+```
 
----
+### Hours
 
-## Don'ts
+```text
+/api/filters/hours
+```
 
-### Data
+### Categories
 
-- Do not join accidents and regions using generated UUIDs.
-- Do not rely on municipality names as identifiers.
+```text
+/api/filters/categories
+```
 
-### Backend
+### Participants
 
-- Do not return inconsistent response structures.
-- Do not expose internal database IDs unnecessarily.
+```text
+/api/filters/participants
+```
 
-### Frontend
+### Filtered Accident Count
 
-- Do not assume API responses always contain data.
-- Do not make unnecessary API requests on every render.
-
-### Database
-
-- Do not duplicate region information inside accident documents.
-- Do not perform full collection scans when indexes can be used.
+```text
+/api/filters/count
+```
 
 ---
 
-## Future Improvements
+# 7. Architecture
 
-- Interactive maps
-- Advanced analytics dashboards
-- Accident severity prediction
-- Regional trend forecasting
-- Export functionality (CSV/PDF)
-- User-defined reports
+Data Flow:
+
+Datasets
+↓
+Import Scripts
+↓
+MongoDB
+↓
+Express REST API
+↓
+React Frontend
+
+The frontend never accesses the database directly.
+
+All database interactions are performed through the REST API.
 
 ---
 
-## Author
+# 8. Mandatory Questions Supported
 
-Developed by Lilian Nabawesi as a full-stack data analytics project using German road accident data from Unfallatlas.
+The system can answer questions such as:
+
+- How many accidents occurred in a specific state and year?
+- How many pedestrian accidents occurred in a selected region?
+- What is the earliest available accident year?
+- For which years is data available in a region?
+- Which accident categories exist?
+- Which participant groups are involved in accidents?
+
+Additionally, the system supports cross-dataset analysis:
+
+- Which regions have the highest accident rate per 100,000 registered cars?
+- How does accident frequency relate to population and vehicle ownership?
+
+---
+
+# 9. Assumptions and Limitations
+
+## Assumptions
+
+- AGS codes uniquely identify German administrative regions.
+- Imported datasets use consistent regional identifiers.
+
+## Limitations
+
+- The application currently focuses on accident counts and indicators.
+- No accident prediction model is implemented.
+- Spatial map visualizations are not included.
+- Data availability depends on the imported dataset versions.
+
+---
+
+# 10. License and Attribution
+
+Data Sources:
+
+- Unfallatlas
+- GENESIS
+- German Municipality Directory (GV-ISys)
+
+All data remains subject to the licensing terms provided by the respective German federal authorities.
+
+The software itself is intended solely for academic purposes.
+
+# 11. User Interface
+
+## Main Dashboard
+
+![Main Dashboard](docs/dashboard.png)
+
+---
+
+## Question Selection and Answer Panel
+
+![Question Panel](docs/questions.png)
+
+---
+
+## Data Sources and License Information
+
+![Data Sources](docs/footer.png)
