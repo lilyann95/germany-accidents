@@ -390,13 +390,37 @@ Example:
 
 GET
 
-```text
-/api/accidents/ranking
-```
+/api/accidents/rankings
 
 Returns:
 
-- Top 5 districts with highest fatal accidents
+Five districts with the highest number of fatal accidents
+Accident counts per district
+Ranking information
+
+---
+
+### Municipalities with Zero Accidents
+
+GET
+
+/api/accidents/municipalityAccident
+
+Parameters:
+
+state_name
+year
+
+### Bicycle Accident Count
+
+GET
+
+/api/accidents/bicycleCount
+
+Parameters:
+
+year
+participant
 
 ---
 
@@ -491,26 +515,117 @@ All database interactions are performed through the REST API.
 
 ---
 
-# 8. Mandatory Questions Supported
+# 8. Mandatory and Additional Questions Supported
 
-The system can answer questions such as:
+The application supports both the mandatory assignment questions and additional analytical queries.
 
-- How many accidents occurred in a specific state and year?
-- How many pedestrian accidents occurred in a selected region?
-- What is the earliest available accident year?
-- For which years is data available in a region?
-- Which accident categories exist?
-- Which participant groups are involved in accidents?
-- Which five districts recorded the highest number of fatal accidents in 2024?
+## Mandatory Questions
 
-Additionally, the system supports cross-dataset analysis:
+The system can answer:
 
-- Which regions have the highest accident rate per 100,000 registered cars?
-- How does accident frequency relate to population and vehicle ownership?
+How many accidents occurred in a selected region?
+How many accidents occurred during a specific year?
+Which accident categories exist?
+Which participant groups were involved?
+Which years are available for a specific region?
+Additional Questions
+
+The following custom analytical questions were implemented:
+
+## Question 1
+
+Which five districts recorded the highest number of fatal accidents in Germany during 2024?
+
+### Datasets used:
+
+Unfallatlas
+GV-ISys
+
+### Method:
+
+Fatal accidents are filtered from Unfallatlas records.
+Municipality AGS codes are aggregated to district-level AGS codes.
+Results are ranked by accident count.
+
+## Question 2
+
+How many bicycle accidents occurred in Dresden during 2024?
+
+### Datasets used:
+
+Unfallatlas
+GV-ISys
+
+### Method:
+
+Municipality AGS is resolved from GV-ISys.
+Accident records are filtered by year and participant type.
+
+## Question 3
+
+Which municipalities in Saxony recorded zero reported accidents during 2023?
+
+### Datasets used:
+
+Unfallatlas
+GV-ISys
+
+### Method:
+
+All municipalities in Saxony are retrieved.
+Municipalities appearing in accident records are identified.
+Municipalities without accident records are returned.
+
+## Cross-Dataset Analysis
+
+Which regions have the highest accident risk relative to vehicle ownership?
+
+### Datasets used:
+
+Unfallatlas
+GENESIS Population
+GENESIS Passenger Cars
+GV-ISys
+
+### Method:
+
+- Accident counts are combined with registered passenger-car statistics.
+- Accident rates per 100,000 registered vehicles are calculated.
 
 ---
 
-# 9. Assumptions and Limitations
+# 9. Data Integration Strategy
+
+The application integrates multiple official datasets using the German AGS administrative identifier.
+
+## AGS-based Linking
+
+All datasets are linked through AGS (Amtlicher Gemeindeschlüssel) codes.
+
+Examples:
+
+Accident records contain AGS identifiers.
+Regions contain AGS identifiers.
+Indicator values reference regions through region identifiers derived from AGS mappings.
+
+This allows the application to:
+
+Join accidents with municipalities.
+Aggregate municipalities to districts.
+Combine accident data with population statistics.
+Combine accident data with vehicle registration statistics.
+
+## Hierarchical Aggregation
+
+Municipality-level accident records are aggregated to district level by deriving district identifiers from municipality AGS codes.
+
+Example:
+
+14612000 → 14612
+
+This mechanism is used for district-level rankings and regional analysis.
+
+# 10. Assumptions and Limitations
 
 ## Assumptions
 
@@ -527,7 +642,7 @@ Additionally, the system supports cross-dataset analysis:
 
 ---
 
-# 10. Dataset Provenance and Licensing
+# 11. Dataset Provenance and Licensing
 
 The application stores provenance information for all imported datasets in the
 `importRuns` collection. Each import records:
@@ -556,7 +671,7 @@ datasets and licenses are included in the response metadata.
 
 The software itself is intended solely for academic purposes.
 
-# 11. User Interface
+# 12. User Interface
 
 ## Main Dashboard
 
