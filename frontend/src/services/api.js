@@ -14,6 +14,13 @@ export const getRegionMeta = (state) => API.get(`/meta/region/:${state}`);
 export const getAnalysisTrafficRisk = () =>
   API.get("/analysis/accidents-per-100k-cars");
 
+export const getAccidentsStats = (params) =>
+  API.get("/accidents/stats", { params });
+export const getAccidentRankingStats = () => API.get("/accidents/rankings");
+export const getBicycleAccidentCount = (params) =>
+  API.get("/accidents/bicycleCount", { params });
+export const getMunicipalityAccidents = (params) =>
+  API.get(`/accidents/municipalityAccident`, { params });
 //Filters
 export const getStates = () => API.get("/filters/states");
 

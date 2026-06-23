@@ -53,8 +53,9 @@ export const getMetaEarliestYear = async (req, res) => {
     return res.status(200).json({
       result: result[0].earliestYear,
       meta: {
-        source: "Unfallatlas",
-        license: "Data licence Germany Attribution 2.0",
+        source: "Unfallatlas, GENESIS & GV-ISys / AGS",
+        provider: "Destatis / Geoportal NRW",
+        license: "Data License Germany – Attribution 2.0 (DL-DE–BY-2.0)",
       },
       explanation:
         "The dataset contains recorded traffic accidents in Germany starting from from the year 2021. There is no data available before this year",
@@ -110,8 +111,9 @@ export const getMetaRegionAvailability = async (req, res) => {
       explanation:
         "This is the region availability according to the stored dataset",
       meta: {
-        source: "Unfallatlas",
-        license: "Data licence Germany Attribution 2.0",
+        provider: "Destatis / Geoportal NRW",
+        source: "Unfallatlas, GENESIS & GV-ISys / AGS",
+        license: "Data License Germany – Attribution 2.0 (DL-DE–BY-2.0)",
       },
     });
   } catch (error) {

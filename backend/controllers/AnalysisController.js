@@ -49,9 +49,9 @@ export const getAnalysisTrafficRisk = async (req, res) => {
     const result =
       totalCars > 0
         ? accidentStats.map((item) => ({
-            year: item._id,
+            name: item._id,
             accidents: item.accidentCount,
-            accidentsPer100kCars: Number(
+            data: Number(
               ((item.accidentCount / totalCars) * 100000).toFixed(2),
             ),
           }))
@@ -59,12 +59,12 @@ export const getAnalysisTrafficRisk = async (req, res) => {
 
     return res.status(200).json({
       result: result,
-
       explanation: `Computed by dividing the number of recorded accidents in per year by the number of registered passenger cars from GENESIS statistics and multiplying by 100,000.`,
 
       meta: {
-        source: "Unfallatlas & GENESIS",
-        license: "Data licence Germany Attribution 2.0",
+        provider: "Destatis / Geoportal NRW",
+        source: "Unfallatlas, GENESIS & GV-ISys / AGS",
+        license: "Data License Germany – Attribution 2.0 (DL-DE–BY-2.0)",
       },
     });
   } catch (error) {

@@ -7,8 +7,9 @@ const LicenseInfo = ({ meta }) => {
         <div className="bg-orange-50 rounded-md border border-orange-300 p-2">
           {meta ? (
             <>
-              <p className="text-md text-gray-600">{meta.license}</p>
               <p className="text-md text-gray-600">{meta.source}</p>
+              <p className="text-md text-gray-600">{meta.provider}</p>
+              <p className="text-md text-gray-600">{meta.license}</p>
             </>
           ) : (
             <>

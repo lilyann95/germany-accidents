@@ -5,6 +5,9 @@ import {
   faCalendarDay,
   faCarBurst,
   faCarOn,
+  faPersonBiking,
+  faRoadCircleExclamation,
+  faPersonFallingBurst,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const questions = [
@@ -18,7 +21,7 @@ export const questions = [
     id: 2,
     title:
       "How many accidents involving personal injury occured in Saxony in 2023?",
-    icon: faUserInjured,
+    icon: faPersonFallingBurst,
     url: "/accidents/count?state_name=Sachsen&year=2023",
   },
   {
@@ -48,5 +51,25 @@ export const questions = [
     title: "Traffic accidents per 100, 000 registered passenger cars",
     icon: faCarOn,
     url: "/analysis/accidents-per-100k-cars",
+  },
+  {
+    id: 7,
+    title:
+      "Which five districts recorded the highest number of fatal accidents in 2024?",
+    icon: faUserInjured,
+    url: "/accidents/rankings",
+  },
+  {
+    id: 8,
+    title: "How many bicycle accidents occurred in Dresden in 2024?",
+    icon: faPersonBiking,
+    url: "/accidents/bicycleCount?municipality=Dresden, Stadt&year=2024&participant=cyclist",
+  },
+  {
+    id: 9,
+    title:
+      "Which municipalities in Saxony recorded zero reported accidents in 2023?",
+    icon: faRoadCircleExclamation,
+    url: "/accidents/municipalityAccident?state_name=Sachsen&year=2023",
   },
 ];

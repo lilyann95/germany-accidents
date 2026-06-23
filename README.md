@@ -1,4 +1,4 @@
-# German Traffic Accident Analysis Platform
+# Germany Traffic Accident Query Service System
 
 ## 1. Project Overview
 
@@ -386,6 +386,20 @@ Example:
 
 ---
 
+### District Ranking
+
+GET
+
+```text
+/api/accidents/ranking
+```
+
+Returns:
+
+- Top 5 districts with highest fatal accidents
+
+---
+
 ## Analysis
 
 ### Accidents per 100,000 Cars
@@ -487,6 +501,7 @@ The system can answer questions such as:
 - For which years is data available in a region?
 - Which accident categories exist?
 - Which participant groups are involved in accidents?
+- Which five districts recorded the highest number of fatal accidents in 2024?
 
 Additionally, the system supports cross-dataset analysis:
 
@@ -508,18 +523,36 @@ Additionally, the system supports cross-dataset analysis:
 - No accident prediction model is implemented.
 - Spatial map visualizations are not included.
 - Data availability depends on the imported dataset versions.
+- Since the AGS system is hierarchical (state → district → municipality), aggregation was performed by deriving district-level identifiers from municipality AGS codes. In future iterations, explicit relational parent-child mappings would replace string-based derivation for robustness.
 
 ---
 
-# 10. License and Attribution
+# 10. Dataset Provenance and Licensing
 
-Data Sources:
+The application stores provenance information for all imported datasets in the
+`importRuns` collection. Each import records:
 
-- Unfallatlas
-- GENESIS
-- German Municipality Directory (GV-ISys)
+- Source dataset
+- Dataset version
+- Import date
+- Number of imported records
+- Import duration
+- Import status
 
-All data remains subject to the licensing terms provided by the respective German federal authorities.
+All API responses include metadata describing the origin of the returned data
+and the applicable license terms.
+
+Example:
+
+{
+"meta": {
+"source": "Unfallatlas",
+"license": "DL-DE-BY-2.0"
+}
+}
+
+For analysis endpoints that combine multiple datasets, all contributing
+datasets and licenses are included in the response metadata.
 
 The software itself is intended solely for academic purposes.
 

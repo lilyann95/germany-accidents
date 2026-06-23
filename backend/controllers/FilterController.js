@@ -215,8 +215,9 @@ export const getFilterAccidentCount = async (req, res) => {
       result: count,
       explanation: `There are ${count} accidents for selected filters`,
       meta: {
-        source: "Unfallatlas",
-        license: "Data licence Germany Attribution 2.0",
+        provider: "Destatis / Geoportal NRW",
+        source: "Unfallatlas, GENESIS & GV-ISys / AGS",
+        license: "Data License Germany – Attribution 2.0 (DL-DE–BY-2.0)",
       },
     });
   } catch (error) {

@@ -25,7 +25,7 @@ const Footer = () => {
               <span className="text-lg font-semibold text-gray-600">
                 Coverage:{" "}
               </span>{" "}
-              2016 - 2024
+              2021 - 2024
             </p>
           </div>
 

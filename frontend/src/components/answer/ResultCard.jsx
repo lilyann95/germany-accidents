@@ -7,9 +7,9 @@ const ResultCard = ({ result, question }) => {
     }
 
     if (Array.isArray(result)) {
-      return result.map((res) => (
-        <h1 key={res.year} className="font-bold text-2xl text-green-500 py-2">
-          {res.year}: {res.accidentsPer100kCars}
+      return result.map((res, index) => (
+        <h1 key={index} className="font-bold text-2xl text-green-500 py-2">
+          {res.name}: {res.data}
         </h1>
       ));
     }
